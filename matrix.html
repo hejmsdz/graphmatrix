@@ -1,0 +1,102 @@
+<table class="table table-bordered">
+    <tr class="">
+        <th>i, j</th>
+        <th ng-class="{active: explainJ == j}" ng-repeat="j in range">{{j}}</th>
+    </tr>
+    <tr ng-repeat="i in range">
+        <th ng-class="{active: explainI == i}">{{i}}</th>
+        <td ng-class="matrixClass[i][j]" ng-repeat="j in range" ng-mouseover="setExplain(i, j)" ng-mouseout="setExplain(-1, -1)">
+            {{matrix[i][j]}}
+        </td>
+    </tr>
+</table>
+
+<div class="well well-sm" ng-show="explainI >= 0 &amp;&amp; explainJ >= 0">
+    <p ng-show="explain == 'empty'">
+        Narożniki zostają puste.
+    </p>
+
+    <!-- succ -->
+    <p ng-show="explain == 'succ-start-empty' || explain == 'succ-list-first'">
+        Ostatnia kolumna <strong>rozpoczyna listę następników</strong>.
+    </p>
+    <p ng-show="explain == 'succ-end-empty' || explain == 'succ-end'">
+        Ostatni wiersz zawiera wskaźniki na <strong>koniec listy następników</strong>.
+    </p>
+    <p ng-show="explain == 'succ-start-empty' || explain == 'succ-end-empty'">
+        Wartość 0 oznacza, że lista jest pusta &mdash; wierzchołek <strong>nie ma następników</strong>.
+    </p>
+    <p ng-show="explain == 'succ-list-first'">
+        Wartość {{val}} oznacza, że <strong>wierzchołek {{val}} jest jego następnikiem</strong>,
+        a w&nbsp;kolumnie nr {{val}} znajduje się kolejny następnik.
+    </p>
+
+    <p ng-show="explain == 'succ-list' || explain == 'succ-list-last'">
+        Wartość {{val}} jest większa niż liczba wierzchołków &mdash;
+        oznacza to, że w&nbsp;grafie <strong>istnieje krawędź {{explainI}} &rarr; {{explainJ}}</strong> (wiersz &rarr; kolumna).
+    </p>
+    <p ng-show="explain == 'succ-list'">
+        Po odjęciu od tej wartości liczby wierzchołków otrzymujemy {{val}} - {{vertices}} = {{val-vertices}},
+        co wskazuje, że właśnie w tej kolumnie znajduje się <strong>kolejny następnik</strong>.
+    </p>
+    <p ng-show="explain == 'succ-list-last'">
+        Po odjęciu od tej wartości liczby wierzchołków otrzymujemy {{val}} - {{vertices}} = {{val-vertices}},
+        czyli numer tej samej kolumny. Sygnalizuje to <strong>koniec listy następników</strong>.
+    </p>
+    <p ng-show="explain == 'succ-end'">
+        Wartość {{val}} odsyła do pola [{{explainJ}},{{val}}]
+    </p>
+
+    <!-- pred -->
+    <p ng-show="explain == 'pred-start-empty' || explain == 'pred-list-first'">
+        Zerowa kolumna <strong>rozpoczyna listę poprzedników</strong>.
+    </p>
+    <p ng-show="explain == 'pred-end-empty' || explain == 'pred-end'">
+        Zerowy wiersz zawiera wskaźniki na <strong>koniec listy poprzedników</strong>.
+    </p>
+    <p ng-show="explain == 'pred-start-empty' || explain == 'pred-end-empty'">
+        Wartość 0 oznacza, że lista jest pusta &mdash; wierzchołek <strong>nie ma poprzedników</strong>.
+    </p>
+    <p ng-show="explain == 'pred-list-first'">
+        Wartość {{val}} oznacza, że <strong>wierzchołek {{val}} jest jego poprzednikiem</strong>,
+        a w&nbsp;kolumnie nr {{val}} znajduje się <strong>kolejny poprzednik</strong>.
+    </p>
+
+    <p ng-show="explain == 'pred-list' || explain == 'pred-list-last'">
+        Wartość {{val}} należy do przedziału [1, <em>liczba_wierzchołków</em>] &mdash;
+        oznacza to, że w&nbsp;grafie <strong>istnieje krawędź {{explainJ}} &rarr; {{explainI}}</strong> (kolumna &rarr; wiersz).
+    </p>
+    <p ng-show="explain == 'pred-list'">
+        Ponadto, wartość {{val}} wskazuje, że właśnie w tej kolumnie znajduje się <strong>kolejny poprzednik</strong>.
+    </p>
+    <p ng-show="explain == 'pred-list-last'">
+        Ponadto, {{val}} to numer tej samej kolumny. Sygnalizuje to <strong>koniec listy poprzedników</strong>.
+    </p>
+    <p ng-show="explain == 'pred-end'">
+        Wartość {{val}} odsyła do pola [{{explainJ}},{{val}}]
+    </p>
+
+    <!-- nonadj -->
+    <p ng-show="explain == 'nonadj-start-empty' || explain == 'nonadj-start'">
+        Na głównej przekątnej rozpoczyna się <strong>lista braku incydencji</strong>.
+    </p>
+    <p ng-show="explain == 'nonadj-start-empty'">
+        Liczba przeciwna do numeru wiersza i kolumny oznacza, że lista jest pusta &mdash;
+        wierzchołek jest <strong>połączony ze&nbsp;wszystkimi innymi</strong>.
+    </p>
+    <p ng-show="explain == 'nonadj-start'">
+        Wartość {{val}} oznacza, że <strong>wierzchołek {{-val}} nie jest z nim połączony</strong>,
+        a w&nbsp;kolumnie nr {{-val}} znajduje się kolejna taka informacja.
+    </p>
+
+    <p ng-show="explain == 'nonadj-list' || explain == 'nonadj-list-last'">
+        Wartość {{val}} jest ujemna &mdash;
+        oznacza to, że w&nbsp;grafie <strong>nie ma krawędzi</strong> między {{explainI}} a {{explainJ}}.
+    </p>
+    <p ng-show="explain == 'nonadj-list'">
+        Ponadto, wskazuje, że właśnie w kolumnie nr {{-val}} znajduje się <strong>kolejny wierzchołek bez połączenia</strong>.
+    </p>
+    <p ng-show="explain == 'nonadj-list-last'">
+        Ponadto, {{-val}} to numer tej samej kolumny. Sygnalizuje to <strong>koniec listy braku incydencji</strong>.
+    </p>
+</div>
